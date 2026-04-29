@@ -1,0 +1,4 @@
+flask
+cohere
+python-dotenv
+gunicorn
