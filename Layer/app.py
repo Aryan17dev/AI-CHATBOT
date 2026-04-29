@@ -56,8 +56,8 @@ def main():
     st.title("Judgement Prediction Model")
 
     st.sidebar.title("AI Assistant Navigation")
-    st.sidebar.markdown("[💬 Chatbot](#chatbot-url)")
-    st.sidebar.markdown("[📄 Doc Generator](#docgen-url)")
+    st.sidebar.markdown("[💬 Chatbot](https://ai-chatbot-696h.onrender.com/)")
+    st.sidebar.markdown("[📄 Doc Generator](https://ai-chatbot-uk2s.onrender.com/)")
     st.sidebar.markdown("**⚖️ Case Outcome Prediction (Current)**")
 
     model, vectorizer = load_model()
