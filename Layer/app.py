@@ -6,34 +6,15 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
 import matplotlib.pyplot as plt
 import re  
-@st.cache_data
-def load_data():
-    df = pd.read_csv('justice.csv')
-    df.rename(columns={'facts': 'facts', 'first_party': 'first_party', 'second_party': 'second_party', 'first_party_winner': 'winner_index'}, inplace=True)
-   
-    if df['winner_index'].isnull().any():
-        df['winner_index'] = df['winner_index'].fillna(0).astype(int)
+import pickle
 
-    df['merged_facts'] = df['first_party'].fillna('') + " " + df['second_party'].fillna('') + " " + df['facts'].fillna('')
- 
-    df.dropna(subset=['merged_facts'], inplace=True)
-
-    return df
-
-@st.cache_data
-def train_model(df):
-    vectorizer = TfidfVectorizer(max_features=2000)
-    X = vectorizer.fit_transform(df['merged_facts'])
-    y = df['winner_index']
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    
-    model = LogisticRegression()
-    model.fit(X_train, y_train)
-    
-    y_pred = model.predict(X_test)
-    report = classification_report(y_test, y_pred, output_dict=True)
-    
-    return model, vectorizer, report
+@st.cache_resource
+def load_model():
+    with open('Layer/case_category_model.pkl', 'rb') as f:
+        model = pickle.load(f)
+    with open('Layer/tfidf_vectorizer.pkl', 'rb') as f:
+        vectorizer = pickle.load(f)
+    return model, vectorizer
 
 def validate_input(first_party, second_party, facts):
     if not first_party.strip():
@@ -75,8 +56,12 @@ def plot_pie_chart(prediction):
 def main():
     st.title("Judgement Prediction Model")
 
-    df = load_data()
-    model, vectorizer, report = train_model(df)
+    st.sidebar.title("AI Assistant Navigation")
+    st.sidebar.markdown("[💬 Chatbot](https://ai-chatbot-696h.onrender.com/)")
+    st.sidebar.markdown("[📄 Doc Generator](https://ai-chatbot-uk2s.onrender.com/)")
+    st.sidebar.markdown("**⚖️ Case Outcome Prediction (Current)**")
+
+    model, vectorizer = load_model()
 
     st.header("Predict Outcome")
     first_party = st.text_input("Enter First Party")
