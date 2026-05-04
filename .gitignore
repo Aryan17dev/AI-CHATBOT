@@ -15,7 +15,7 @@ __pycache__/
 .Python
 
 # Logs and Data
-*.csv
+# *.csv  <-- Commented out so justice.csv can be uploaded to Streamlit!
 *.log
 
 # Jupyter Notebook
